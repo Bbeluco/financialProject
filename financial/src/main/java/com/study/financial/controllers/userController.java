@@ -17,7 +17,7 @@ public class userController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<UserCompleteInfoDTO> getAllInfoAboutUser(@PathVariable int userId){
-        UserEntity teste = userRepository.findById(userId).get();
-        return ResponseEntity.ok(new UserCompleteInfoDTO(teste));
+        UserEntity user = userRepository.findById(userId).get();
+        return ResponseEntity.ok(new UserCompleteInfoDTO(user));
     }
 }
