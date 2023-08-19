@@ -1,17 +1,8 @@
 package com.study.financial.exceptions;
 
-public class IncompleteBodyParametersException extends Throwable{
-    private String message;
+public class IncompleteBodyParametersException extends Exception{
 
-    public IncompleteBodyParametersException(String errorMessage){
-        this.message = errorMessage;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public IncompleteBodyParametersException(String message){
+        super(message);
     }
 }

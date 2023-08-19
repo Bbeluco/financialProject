@@ -1,7 +1,6 @@
 package com.study.financial.controllers;
 
 import com.study.financial.DTO.TransactionDTO;
-import com.study.financial.exceptions.NotEnoughMoneyException;
 import com.study.financial.sevices.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,7 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @PostMapping("/transaction")
-    public ResponseEntity paymentTransaction(@RequestBody TransactionDTO transactionDTO) throws NotEnoughMoneyException {
+    public ResponseEntity paymentTransaction(@RequestBody TransactionDTO transactionDTO) throws Exception {
         transactionService.transaction(transactionDTO);
         return ResponseEntity.ok("OK");
     }

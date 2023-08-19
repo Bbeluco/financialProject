@@ -17,15 +17,15 @@ public class TransactionDTO {
 
     private static void requestMethodsValidation(int payer, int payee) throws IncompleteBodyParametersException  {
         if(payer == 0 && payee == 0){
-            throw new IncompleteBodyParametersException("Please, selece a valid payer and payee");
+            throw new IncompleteBodyParametersException("Please, select a valid payer and payee");
         }
 
         if(payer == 0){
-            throw new IncompleteBodyParametersException("Please, selece a valid payer");
+            throw new IncompleteBodyParametersException("Please, select a valid payer");
         }
 
         if(payee == 0) {
-            throw new IncompleteBodyParametersException("Please, selece a valid payee");
+            throw new IncompleteBodyParametersException("Please, select a valid payee");
         }
     }
 
