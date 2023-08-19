@@ -1,9 +1,9 @@
 package com.study.financial.DTO.errors;
 
-public class IncompleteBodyParametersDTO {
+public class GenericTransactionsDTO {
     private String message;
 
-    public IncompleteBodyParametersDTO(String message){
+    public GenericTransactionsDTO(String message){
         this.message = message;
     }
 
