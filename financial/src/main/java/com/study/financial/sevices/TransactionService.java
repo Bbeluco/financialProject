@@ -3,18 +3,21 @@ package com.study.financial.sevices;
 import com.study.financial.DTO.TransactionDTO;
 import com.study.financial.constants.RegexConstants;
 import com.study.financial.entities.UserEntity;
-import com.study.financial.exceptions.NotEnoughMoneyException;
-import com.study.financial.exceptions.SellerPayingException;
-import com.study.financial.exceptions.UserNotFoundException;
+import com.study.financial.exceptions.*;
 import com.study.financial.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+
 @Service
 public class TransactionService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private HttpRequestAuthTransferBalanceService httpRequestAuthTransferBalanceService;
 
     private UserEntity payer;
     private UserEntity payee;
@@ -23,16 +26,31 @@ public class TransactionService {
     public boolean transaction(TransactionDTO transactionDTO) throws Exception {
         getUserFromDatabase(transactionDTO);
         validationsBeforeTransaction(transactionDTO, this.payer);
+        setNewBalanceValuesToPayerAndPayee(transactionDTO);
+
+        isAuthorizedToTransfer();
+
+        saveNewBalanceValuesInDatabase();
+        return true;
+    }
+
+    private void isAuthorizedToTransfer() throws InstableSystemRunning, ThirdPartServiceDoesNotAuthorizeTransfer {
+        if(!httpRequestAuthTransferBalanceService.isTransferAuthorizedByThirdPartApp()){
+            throw new ThirdPartServiceDoesNotAuthorizeTransfer("Sorry, the third part system does not authorize you to complete the transaction");
+        }
+    }
+
+    private void setNewBalanceValuesToPayerAndPayee(TransactionDTO transactionDTO) {
         double newPayerBalance = calculateNewBalance("payer", transactionDTO);
         double newPayeeBalance = calculateNewBalance("payee", transactionDTO);
 
         this.payer.getWallet().setBalance((float) newPayerBalance);
         this.payee.getWallet().setBalance((float) newPayeeBalance);
+    }
 
-
+    private void saveNewBalanceValuesInDatabase() {
         this.userRepository.save(this.payer);
         this.userRepository.save(this.payee);
-        return true;
     }
 
     private double calculateNewBalance(String entityInvolved, TransactionDTO transactionDTO) {
